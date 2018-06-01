@@ -1,3 +1,4 @@
 *.db
 *.dat
 .DS_Store
+blockchain-go
