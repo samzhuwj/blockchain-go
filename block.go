@@ -45,3 +45,16 @@ func NewBlock(data string, prevBlockHash []byte) *Block {
 func NewGenesisBlock() *Block {
 	return NewBlock("Genesis Block", []byte{})
 }
+
+// DeserializeBlock deserializes a block
+func DeserializeBlock(d []byte) *Block {
+	var block Block
+
+	decoder := gob.NewDecoder(bytes.NewReader(d))
+	err := decoder.Decode(&block)
+	if err != nil {
+		log.Panic(err)
+	}
+
+	return &block
+}
