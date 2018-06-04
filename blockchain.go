@@ -57,6 +57,13 @@ func (bc *Blockchain) AddBlock(data string) {
 	})
 }
 
+// Iterator ...
+func (bc *Blockchain) Iterator() *BlockchainIterator {
+	bci := &BlockchainIterator{bc.tip, bc.db}
+
+	return bci
+}
+
 // NewBlockchain creates a new Blockchain with genesis Block
 func NewBlockchain() *Blockchain {
 	var tip []byte
