@@ -1,5 +1,9 @@
 package main
 
+import (
+	"fmt"
+)
+
 // Transaction represents a Bitcoin transaction
 type Transaction struct {
 	ID   []byte
@@ -18,4 +22,18 @@ type TXInput struct {
 type TXOutput struct {
 	Value        int
 	ScriptPubKey string
+}
+
+// NewCoinbaseTX creates a new coinbase transaction
+func NewCoinbaseTX(to, data string) *Transaction {
+	if data == "" {
+		data = fmt.Sprintf("Reward to '%s'", to)
+	}
+
+	txin := TXInput{[]byte{}, -1, data}
+	txout := TXOutput{subsidy, to}
+	tx := Transaction{nil, []TXInput{txin}, []TXOutput{txout}}
+	tx.SetID()
+
+	return &tx
 }
