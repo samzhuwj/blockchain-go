@@ -26,11 +26,6 @@ func (cli *CLI) validateArgs() {
 	}
 }
 
-func (cli *CLI) addBlock(data string) {
-	cli.bc.AddBlock(data)
-	fmt.Println("Success!")
-}
-
 func (cli *CLI) printChain() {
 	bci := cli.bc.Iterator()
 
@@ -38,7 +33,6 @@ func (cli *CLI) printChain() {
 		block := bci.Next()
 
 		fmt.Printf("Prev. hash: %x\n", block.PrevBlockHash)
-		fmt.Printf("Data: %s\n", block.Data)
 		fmt.Printf("Hash: %x\n", block.Hash)
 		pow := NewProofOfWork(block)
 		fmt.Printf("PoW: %s\n", strconv.FormatBool(pow.Validate()))
@@ -73,14 +67,6 @@ func (cli *CLI) Run() {
 	default:
 		cli.printUsage()
 		os.Exit(1)
-	}
-
-	if addBlockCmd.Parsed() {
-		if *addBlockData == "" {
-			addBlockCmd.Usage()
-			os.Exit(1)
-		}
-		cli.addBlock(*addBlockData)
 	}
 
 	if printChainCmd.Parsed() {
