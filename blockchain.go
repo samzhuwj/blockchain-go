@@ -10,6 +10,7 @@ import (
 
 const dbFile = "blockchain.db"
 const blocksBucket = "blocks"
+const genesisCoinbaseData = "The Times 03/Jan/2009 Chancellor on brink of second bailout for banks"
 
 // Blockchain keeps a sequence of Blocks
 type Blockchain struct {
@@ -21,41 +22,6 @@ type Blockchain struct {
 type BlockchainIterator struct {
 	currentHash []byte
 	db          *bolt.DB
-}
-
-// AddBlock saves provided data as a block in the blockchain
-func (bc *Blockchain) AddBlock(data string) {
-	var lastHash []byte
-
-	err := bc.db.View(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(blocksBucket))
-		lastHash = b.Get([]byte("l"))
-
-		return nil
-	})
-
-	if err != nil {
-		log.Panic(err)
-	}
-
-	newBlock := NewBlock(data, lastHash)
-
-	err = bc.db.Update(func(tx *bolt.Tx) error {
-		b := tx.Bucket([]byte(blocksBucket))
-		err := b.Put(newBlock.Hash, newBlock.Serialize())
-		if err != nil {
-			log.Panic(err)
-		}
-
-		err = b.Put([]byte("l"), newBlock.Hash)
-		if err != nil {
-			log.Panic(err)
-		}
-
-		bc.tip = newBlock.Hash
-
-		return nil
-	})
 }
 
 // Iterator ...
@@ -84,6 +50,14 @@ func (i *BlockchainIterator) Next() *Block {
 	i.currentHash = block.PrevBlockHash
 
 	return block
+}
+
+func dbExists() bool {
+	if _, err := os.Stat(dbFile); os.IsNotExist(err) {
+		return false
+	}
+
+	return true
 }
 
 // NewBlockchain creates a new Blockchain with genesis Block
