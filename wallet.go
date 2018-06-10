@@ -7,6 +7,8 @@ import (
 	"log"
 )
 
+const walletFile = "wallet.dat"
+
 // Wallet stores private and public keys
 type Wallet struct {
 	PrivateKey ecdsa.PrivateKey
