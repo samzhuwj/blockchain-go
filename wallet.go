@@ -1,6 +1,7 @@
 package main
 
 import (
+	"bytes"
 	"crypto/ecdsa"
 	"crypto/elliptic"
 	"crypto/rand"
@@ -53,6 +54,17 @@ func HashPubKey(pubKey []byte) []byte {
 	publicRIPEMD160 := RIPEMD160Hasher.Sum(nil)
 
 	return publicRIPEMD160
+}
+
+// ValidateAddress check if address if valid
+func ValidateAddress(address string) bool {
+	pubKeyHash := Base58Decode([]byte(address))
+	actualChecksum := pubKeyHash[len(pubKeyHash)-addressChecksumLen:]
+	version := pubKeyHash[0]
+	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-addressChecksumLen]
+	targetChecksum := checksum(append([]byte{version}, pubKeyHash...))
+
+	return bytes.Compare(actualChecksum, targetChecksum) == 0
 }
 
 // Checksum generates a checksum for a public key
