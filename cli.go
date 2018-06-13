@@ -11,12 +11,6 @@ import (
 // CLI responsible for processing command line arguments
 type CLI struct{}
 
-func (cli *CLI) createBlockchain(address string) {
-	bc := CreateBlockchain(address)
-	bc.db.Close()
-	fmt.Println("Done!")
-}
-
 func (cli *CLI) getBalance(address string) {
 	if !ValidateAddress(address) {
 		log.Panic("ERROR: Address is not valid")
