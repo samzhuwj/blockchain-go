@@ -11,25 +11,6 @@ import (
 // CLI responsible for processing command line arguments
 type CLI struct{}
 
-func (cli *CLI) getBalance(address string) {
-	if !ValidateAddress(address) {
-		log.Panic("ERROR: Address is not valid")
-	}
-	bc := NewBlockchain(address)
-	defer bc.db.Close()
-
-	balance := 0
-	pubKeyHash := Base58Decode([]byte(address))
-	pubKeyHash = pubKeyHash[1 : len(pubKeyHash)-4]
-	UTXOs := bc.FindUTXO(pubKeyHash)
-
-	for _, out := range UTXOs {
-		balance += out.Value
-	}
-
-	fmt.Printf("Balance of '%s': %d\n", address, balance)
-}
-
 func (cli *CLI) printUsage() {
 	fmt.Println("Usage:")
 	fmt.Println("  getbalance -address ADDRESS - Get balance of ADDRESS")
