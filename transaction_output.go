@@ -27,3 +27,8 @@ func NewTXOutput(value int, address string) *TXOutput {
 
 	return txo
 }
+
+// TXOutputs collects TXOutput
+type TXOutputs struct {
+	Outputs []TXOutput
+}
