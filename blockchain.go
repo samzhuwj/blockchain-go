@@ -68,7 +68,7 @@ func CreateBlockchain(address string) *Blockchain {
 }
 
 // NewBlockchain creates a new Blockchain with genesis Block
-func NewBlockchain(address string) *Blockchain {
+func NewBlockchain() *Blockchain {
 	if dbExists() == false {
 		fmt.Println("No existing blockchain found. Create one first.")
 		os.Exit(1)
@@ -168,7 +168,7 @@ func (bc *Blockchain) Iterator() *BlockchainIterator {
 }
 
 // MineBlock mines a new block with the provided transactions
-func (bc *Blockchain) MineBlock(transactions []*Transaction) {
+func (bc *Blockchain) MineBlock(transactions []*Transaction) *Block {
 	var lastHash []byte
 
 	for _, tx := range transactions {
@@ -208,6 +208,8 @@ func (bc *Blockchain) MineBlock(transactions []*Transaction) {
 	if err != nil {
 		log.Panic(err)
 	}
+
+	return newBlock
 }
 
 // SignTransaction signs inputs of a Transaction
